@@ -1,5 +1,5 @@
 import { View,StyleSheet,Text,TouchableOpacity, Platform, StatusBar, FlatList} from 'react-native';
-
+import { useRef,useState } from 'react';
 import FeedItem from '../../components/FeedItem';
 export default function Home() {
 
@@ -23,6 +23,13 @@ export default function Home() {
       description: 'Aprendendo a trabalhar com Drag and Drop no React Native'
     }
   ]
+
+  const [showItem, setShowItem] = useState(feedItem[0])
+  const onViewRef = useRef(({viewbleItems})=>{
+    if(viewbleItems && viewbleItems.length > 0){
+      setShowItem(feedItem[viewbleItems[0].index])
+    }
+  })
  return (
    <View style={styles.container}>
 
@@ -41,7 +48,8 @@ export default function Home() {
 
     <FlatList 
       data={feedItem}
-      renderItem={({item})=> <FeedItem data={item}/>}
+      renderItem={({item})=> <FeedItem data={item} visibleItem={showItem}/>}
+      onViewableItemsChanged={onViewRef.current} // toda vez que triacr o item, chama alguma coisa.
     />
      
    </View>
