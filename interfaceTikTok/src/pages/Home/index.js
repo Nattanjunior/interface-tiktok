@@ -1,6 +1,9 @@
-import { View,StyleSheet,Text,TouchableOpacity, Platform, StatusBar, FlatList} from 'react-native';
+import { View,StyleSheet,Text,TouchableOpacity, Platform, StatusBar, FlatList,Dimensions} from 'react-native';
 import { useRef,useState } from 'react';
 import FeedItem from '../../components/FeedItem';
+
+const { height: heightScreen} = Dimensions.get("screen")
+
 export default function Home() {
 
   const feedItem = [
@@ -25,11 +28,11 @@ export default function Home() {
   ]
 
   const [showItem, setShowItem] = useState(feedItem[0])
-  const onViewRef = useRef(({viewbleItems})=>{
-    if(viewbleItems && viewbleItems.length > 0){
-      setShowItem(feedItem[viewbleItems[0].index])
+  const onViewRef = useRef(({ viewableItems }) => {
+    if(viewableItems && viewableItems.length > 0){
+      setShowItem(feedItem[viewableItems[0].index])
     }
-  })
+  } )
  return (
    <View style={styles.container}>
 
@@ -48,8 +51,23 @@ export default function Home() {
 
     <FlatList 
       data={feedItem}
-      renderItem={({item})=> <FeedItem data={item} visibleItem={showItem}/>}
-      onViewableItemsChanged={onViewRef.current} // toda vez que triacr o item, chama alguma coisa.
+      renderItem={({item})=> <FeedItem data={item} currentvisibleItem={showItem}/>}
+      onViewableItemsChanged={onViewRef.current} // toda vez que trocar o item, chama alguma coisa.
+      snapToAlignment='center'
+      snapToInterval={heightScreen} // qual o tamanho da tela que ele de rolar
+      scrollEventThrottle={200}   // quando começar a rolar, ele vai fazer a rolagem automática
+      decelerationRate={"fast"} // rolagem automática rápida ou lenta
+      viewabilityConfig={{ // configuração se o usuário está vendo algo na tela ou não
+        waitForInteraction: false,
+        viewAreaCoveragePercentThreshold: 100 // 0 a 100
+        /*
+          100 significa que um item deve estar TOTALMENTE VISIVEL na tela ou
+          cobrir a tela para conatr como visivel.
+        */
+      }}
+      showsVerticalScrollIndicator={false}
+    
+    
     />
      
    </View>

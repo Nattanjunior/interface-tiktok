@@ -4,17 +4,17 @@ import { useRef, useState,useEffect } from 'react';
 import {Ionicons} from '@expo/vector-icons'
 
 const {height: heightScreen} = Dimensions.get("screen") // pegando as dimensões da tela do usuário
-export default function FeedItem({data, visibleItem}) {
+export default function FeedItem({data, currentvisibleItem}) {
   const video = useRef(null)
   const [status, setStatus] = useState({})
 
   useEffect(()=>{
-    if(visibleItem?.id === data.id){
+    if(currentvisibleItem?.id === data.id){
       video.current?.playAsync()
     }else{
       video.current?.pauseAsync
     }
-  },[visibleItem])
+  },[currentvisibleItem])
 
   const handlePlayer = ()=>{
     status.isPlaying ? video.current?.pauseAsync() : video.current?.playAsync()
